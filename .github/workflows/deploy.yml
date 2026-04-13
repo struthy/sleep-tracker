@@ -35,6 +35,11 @@ jobs:
           echo "VITE_FIREBASE_MESSAGING_SENDER_ID=${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}" >> .env
           echo "VITE_FIREBASE_APP_ID=${{ secrets.VITE_FIREBASE_APP_ID }}" >> .env
           echo "VITE_ANTHROPIC_API_KEY=${{ secrets.VITE_ANTHROPIC_API_KEY }}" >> .env
+      - name: Verify API key is set
+        run: |
+          KEY=$(grep VITE_ANTHROPIC_API_KEY .env | cut -d= -f2)
+          echo "Key length: ${#KEY}"
+          if [ -z "$KEY" ]; then echo "WARNING: API key is empty!"; else echo "API key is present"; fi
       - run: npm run build
       - uses: actions/upload-pages-artifact@v3
         with:
