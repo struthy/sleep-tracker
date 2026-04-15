@@ -2,6 +2,10 @@ import { GoogleAuthProvider, signInWithPopup, signOut } from 'firebase/auth'
 import { doc, getDoc, setDoc, updateDoc, arrayUnion, serverTimestamp } from 'firebase/firestore'
 import { auth, db } from './firebase'
 
+export async function updateChildProfile(familyId, fields) {
+  await updateDoc(doc(db, 'families', familyId), fields)
+}
+
 const provider = new GoogleAuthProvider()
 
 export async function signInWithGoogle() {

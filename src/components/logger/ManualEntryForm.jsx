@@ -4,6 +4,7 @@ import { addEntry } from '../../services/sleepService'
 import { combineDateAndTime, todayDateString, currentTimeString, formatDuration } from '../../utils/dateHelpers'
 import NotesMoodPicker from './NotesMoodPicker'
 import ErrorBanner from '../shared/ErrorBanner'
+import { Sun, Moon } from '@phosphor-icons/react'
 
 export default function ManualEntryForm() {
   const { familyId, user } = useAuth()
@@ -71,14 +72,14 @@ export default function ManualEntryForm() {
             className={`type-btn${type === 'nap' ? ' active' : ''}`}
             onClick={() => setType('nap')}
           >
-            ☀️ Nap
+            <Sun size={16} weight="duotone" /> Nap
           </button>
           <button
             type="button"
             className={`type-btn${type === 'night' ? ' active' : ''}`}
             onClick={() => setType('night')}
           >
-            🌙 Night
+            <Moon size={16} weight="duotone" /> Night
           </button>
         </div>
 

@@ -1,5 +1,5 @@
 import { formatDuration } from '../../utils/dateHelpers'
-import { DEFAULT_REC, getSleepStatus } from '../../utils/recommendations'
+import { getRecForAge, getSleepStatus } from '../../utils/recommendations'
 
 function StatCard({ label, value, sub, highlight }) {
   return (
@@ -11,8 +11,9 @@ function StatCard({ label, value, sub, highlight }) {
   )
 }
 
-export default function StatsCards({ stats }) {
-  const status = getSleepStatus(stats.todayTotalMinutes, DEFAULT_REC)
+export default function StatsCards({ stats, childAge }) {
+  const rec = getRecForAge(childAge)
+  const status = getSleepStatus(stats.todayTotalMinutes, rec)
   const statusMap = { good: 'green', under: 'yellow', over: 'blue' }
 
   return (
@@ -20,7 +21,7 @@ export default function StatsCards({ stats }) {
       <StatCard
         label="Today's total"
         value={formatDuration(stats.todayTotalMinutes)}
-        sub={`Goal: ${DEFAULT_REC.minHours}–${DEFAULT_REC.maxHours}h`}
+        sub={`Goal: ${rec.minHours}–${rec.maxHours}h`}
         highlight={statusMap[status]}
       />
       <StatCard

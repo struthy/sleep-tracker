@@ -2,16 +2,17 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { signInWithGoogle, initializeUserData, joinFamily } from '../../services/auth'
 import { useAuth } from '../../context/AuthContext'
+import { Moon } from '@phosphor-icons/react'
 
 export default function LoginPage() {
   const { user, setFamilyId } = useAuth()
   const navigate = useNavigate()
+  const [joinMode, setJoinMode] = useState(false)
+
   // Redirect if already signed in
   useEffect(() => {
-    if (user) navigate('/log', { replace: true })
-  }, [user, navigate])
-
-  const [joinMode, setJoinMode] = useState(false)
+    if (user && !joinMode) navigate('/log', { replace: true })
+  }, [user, joinMode, navigate])
   const [familyIdInput, setFamilyIdInput] = useState('')
   const [error, setError] = useState(null)
   const [loading, setLoading] = useState(false)
@@ -54,7 +55,7 @@ export default function LoginPage() {
     <div className="login-page">
       <div className="login-card">
         <div className="login-logo">
-          <span className="login-emoji">🌙</span>
+          <Moon size={52} weight="duotone" color="var(--primary)" />
           <h1>Sleep Tracker</h1>
           <p>Track your little one's sleep</p>
         </div>

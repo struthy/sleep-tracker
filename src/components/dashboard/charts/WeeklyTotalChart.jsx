@@ -34,8 +34,8 @@ export default function WeeklyTotalChart({ data }) {
           <Tooltip content={<CustomTooltip />} />
           <ReferenceLine y={minLine} stroke="#22c55e" strokeDasharray="4 2" label={{ value: 'Min', fontSize: 10, fill: '#22c55e' }} />
           <ReferenceLine y={maxLine} stroke="#3b82f6" strokeDasharray="4 2" label={{ value: 'Max', fontSize: 10, fill: '#3b82f6' }} />
-          <Bar dataKey="napMinutes" name="Nap" stackId="a" fill="#fbbf24" radius={[0, 0, 0, 0]} />
-          <Bar dataKey="nightMinutes" name="Night" stackId="a" fill="#6366f1" radius={[4, 4, 0, 0]} />
+          <Bar dataKey="napMinutes" name="Nap" stackId="a" fill="#fdd34d" radius={[0, 0, 0, 0]} />
+          <Bar dataKey="nightMinutes" name="Night" stackId="a" fill="#c2a0fc" radius={[6, 6, 0, 0]} />
         </BarChart>
       </ResponsiveContainer>
     </div>

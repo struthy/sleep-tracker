@@ -1,8 +1,11 @@
 import { useState } from 'react'
 import ReactMarkdown from 'react-markdown'
 import { getInsights } from '../../services/claudeService'
+import { Sparkle } from '@phosphor-icons/react'
+import { useAuth } from '../../context/AuthContext'
 
 export default function AIInsightsPanel({ aiStats }) {
+  const { childName, childAge, childSex, childNotes } = useAuth()
   const [response, setResponse] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -12,7 +15,7 @@ export default function AIInsightsPanel({ aiStats }) {
     setLoading(true)
     setError(null)
     try {
-      const text = await getInsights(aiStats)
+      const text = await getInsights(aiStats, { childName, childAge, childSex, childNotes })
       setResponse(text)
     } catch (e) {
       setError(e.message)
@@ -24,7 +27,7 @@ export default function AIInsightsPanel({ aiStats }) {
   return (
     <div className="ai-panel">
       <div className="ai-panel-header">
-        <span className="ai-icon">✨</span>
+        <Sparkle size={26} weight="duotone" color="var(--accent-nap)" className="ai-icon" />
         <div>
           <h3 className="card-title">AI Sleep Insights</h3>
           <p className="card-subtitle">Personalized feedback powered by Claude</p>

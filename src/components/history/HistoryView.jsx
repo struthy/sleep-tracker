@@ -4,11 +4,12 @@ import { useSleepEntries } from '../../hooks/useSleepEntries'
 import EntryCard from './EntryCard'
 import LoadingSpinner from '../shared/LoadingSpinner'
 import ErrorBanner from '../shared/ErrorBanner'
+import { Sun, Moon } from '@phosphor-icons/react'
 
 const FILTERS = [
-  { value: 'all', label: 'All' },
-  { value: 'nap', label: '☀️ Naps' },
-  { value: 'night', label: '🌙 Night' },
+  { value: 'all', label: 'All', icon: null },
+  { value: 'nap', label: 'Naps', icon: <Sun size={14} weight="duotone" /> },
+  { value: 'night', label: 'Night', icon: <Moon size={14} weight="duotone" /> },
 ]
 
 export default function HistoryView() {
@@ -28,8 +29,9 @@ export default function HistoryView() {
             key={f.value}
             className={`filter-tab${filter === f.value ? ' active' : ''}`}
             onClick={() => setFilter(f.value)}
+            style={{ display: 'flex', alignItems: 'center', gap: '5px' }}
           >
-            {f.label}
+            {f.icon}{f.label}
           </button>
         ))}
       </div>

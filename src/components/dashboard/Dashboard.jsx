@@ -9,9 +9,33 @@ import SleepConsistencyChart from './charts/SleepConsistencyChart'
 import AIInsightsPanel from '../ai/AIInsightsPanel'
 import LoadingSpinner from '../shared/LoadingSpinner'
 import ErrorBanner from '../shared/ErrorBanner'
+import { User } from '@phosphor-icons/react'
+
+function ChildBanner({ name, age, sex, photoDataURL }) {
+  const sexLabel = sex === 'male' ? 'Boy' : sex === 'female' ? 'Girl' : null
+  return (
+    <div className="child-banner">
+      <div className="child-banner-photo">
+        {photoDataURL
+          ? <img src={photoDataURL} alt={name} className="child-banner-img" />
+          : <User size={36} weight="duotone" color="var(--text-2)" />
+        }
+      </div>
+      <div className="child-banner-info">
+        <div className="child-banner-name">{name}</div>
+        {(age !== null || sexLabel) && (
+          <div className="child-banner-meta">
+            {[age !== null ? `${age} yr${age !== 1 ? 's' : ''}` : null, sexLabel]
+              .filter(Boolean).join(' · ')}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
 
 export default function Dashboard() {
-  const { familyId } = useAuth()
+  const { familyId, childName, childAge, childSex, childPhotoDataURL } = useAuth()
   const { stats, loading, error } = useDashboardStats(familyId)
 
   if (loading) return <LoadingSpinner message="Loading dashboard…" />
@@ -20,6 +44,9 @@ export default function Dashboard() {
   if (!stats || stats.totalEntries === 0) {
     return (
       <div className="page">
+        {childName && (
+          <ChildBanner name={childName} age={childAge} sex={childSex} photoDataURL={childPhotoDataURL} />
+        )}
         <h2 className="page-title">Dashboard</h2>
         <div className="empty-state">
           <p>No sleep data yet. Start logging on the Log tab!</p>
@@ -32,9 +59,11 @@ export default function Dashboard() {
 
   return (
     <div className="page">
-      <h2 className="page-title">Dashboard</h2>
+      {childName && (
+        <ChildBanner name={childName} age={childAge} sex={childSex} photoDataURL={childPhotoDataURL} />
+      )}
 
-      <StatsCards stats={stats} />
+      <StatsCards stats={stats} childAge={childAge} />
 
       <WeeklyTotalChart data={stats.daily7} />
 
@@ -49,7 +78,7 @@ export default function Dashboard() {
 
       <SleepConsistencyChart data={stats.consistencyData} />
 
-      <SleepRecommendations avgDailyMinutes={avgDailyMinutes} />
+      <SleepRecommendations avgDailyMinutes={avgDailyMinutes} childAge={childAge} />
 
       <AIInsightsPanel aiStats={stats.aiStats} />
     </div>

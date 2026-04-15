@@ -3,6 +3,7 @@ import { updateEntry } from '../../services/sleepService'
 import { useAuth } from '../../context/AuthContext'
 import { formatDuration, combineDateAndTime } from '../../utils/dateHelpers'
 import ErrorBanner from '../shared/ErrorBanner'
+import { Sun, Moon } from '@phosphor-icons/react'
 
 function toInputDate(ts) {
   const d = ts?.toDate ? ts.toDate() : new Date(ts)
@@ -66,10 +67,10 @@ export default function EditEntryModal({ entry, onClose }) {
         <form onSubmit={handleSave} className="manual-form">
           <div className="type-toggle">
             <button type="button" className={`type-btn${type === 'nap' ? ' active' : ''}`} onClick={() => setType('nap')}>
-              ☀️ Nap
+              <Sun size={16} weight="duotone" /> Nap
             </button>
             <button type="button" className={`type-btn${type === 'night' ? ' active' : ''}`} onClick={() => setType('night')}>
-              🌙 Night
+              <Moon size={16} weight="duotone" /> Night
             </button>
           </div>
 

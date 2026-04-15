@@ -1,13 +1,27 @@
 const ANTHROPIC_API_URL = 'https://api.anthropic.com/v1/messages'
 
-function buildPrompt(stats) {
+function ageRec(childAge) {
+  if (!childAge) return '11–14 hours (toddler estimate)'
+  if (childAge < 1) return '12–16 hours (including naps)'
+  if (childAge <= 2) return '11–14 hours (including naps)'
+  if (childAge <= 5) return '10–13 hours (including naps)'
+  return '9–12 hours'
+}
+
+function buildPrompt(stats, { childName, childAge, childSex, childNotes } = {}) {
+  const name = childName || 'the child'
+  const pronoun = childSex === 'male' ? 'he' : childSex === 'female' ? 'she' : 'they'
+  const possessive = childSex === 'male' ? 'his' : childSex === 'female' ? 'her' : 'their'
+
   const lines = [
-    `Here is my toddler's sleep data from the past 14 days:`,
+    `Here is ${name}'s sleep data from the past 14 days:`,
+    ...(childAge ? [`Age: ${childAge} year${childAge !== 1 ? 's' : ''} old`] : []),
+    ...(childSex ? [`Sex: ${childSex}`] : []),
+    ...(childNotes ? [`Additional context: ${childNotes}`] : []),
     ``,
     `Daily totals (most recent first):`,
     ...stats.dailyTotals.map(
-      (d) =>
-        `  ${d.date}: ${d.totalHours}h total (${d.napMinutes}min nap, ${d.nightMinutes}min night sleep)`
+      (d) => `  ${d.date}: ${d.totalHours}h total (${d.napMinutes}min nap, ${d.nightMinutes}min night sleep)`
     ),
     ``,
     `Averages:`,
@@ -19,18 +33,19 @@ function buildPrompt(stats) {
     ``,
     `Notes/moods logged: ${stats.recentNotes || 'None'}`,
     ``,
-    `Please provide personalized, practical feedback on this toddler's sleep patterns. Include:`,
+    `Please provide personalized, practical feedback on ${name}'s sleep patterns.`,
+    `Refer to ${name} by name and use ${pronoun}/${possessive} pronouns. Include:`,
     `1. What's going well`,
     `2. Areas for improvement`,
     `3. 2-3 specific, actionable tips`,
-    `4. How this compares to AAP recommendations for toddlers (11-14 hours total per day)`,
+    `4. How this compares to AAP recommendations for this age (${ageRec(childAge)} per day)`,
     ``,
     `Keep your response warm, supportive, and concise (around 300 words).`,
   ]
   return lines.join('\n')
 }
 
-export async function getInsights(stats) {
+export async function getInsights(stats, profile = {}) {
   const apiKey = import.meta.env.VITE_ANTHROPIC_API_KEY
   if (!apiKey) throw new Error('Anthropic API key not configured.')
 
@@ -47,7 +62,7 @@ export async function getInsights(stats) {
       max_tokens: 1024,
       system:
         'You are a friendly, knowledgeable pediatric sleep consultant. Give practical, evidence-based advice to parents about their toddler\'s sleep. Use markdown formatting in your response.',
-      messages: [{ role: 'user', content: buildPrompt(stats) }],
+      messages: [{ role: 'user', content: buildPrompt(stats, profile) }],
     }),
   })
 

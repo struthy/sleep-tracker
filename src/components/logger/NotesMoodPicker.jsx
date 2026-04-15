@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Sun, Moon } from '@phosphor-icons/react'
 
 const MOODS = [
   { value: 'great', emoji: '😄', label: 'Great' },
@@ -14,8 +15,11 @@ export default function NotesMoodPicker({ onSave, onCancel, sleepType, duration 
     <div className="modal-overlay">
       <div className="bottom-sheet">
         <div className="sheet-handle" />
-        <h2 className="sheet-title">
-          {sleepType === 'nap' ? '☀️ Nap' : '🌙 Night sleep'} logged
+        <h2 className="sheet-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {sleepType === 'nap'
+            ? <Sun size={20} weight="duotone" />
+            : <Moon size={20} weight="duotone" />}
+          {sleepType === 'nap' ? 'Nap' : 'Night sleep'} logged
           {duration && <span className="sheet-duration"> · {duration}</span>}
         </h2>
 

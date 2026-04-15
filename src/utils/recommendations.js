@@ -9,6 +9,14 @@ export const SLEEP_RECOMMENDATIONS = [
 // Default to toddler
 export const DEFAULT_REC = SLEEP_RECOMMENDATIONS[2]
 
+export function getRecForAge(age) {
+  if (!age) return DEFAULT_REC
+  if (age < 1) return SLEEP_RECOMMENDATIONS[0]
+  if (age <= 2) return SLEEP_RECOMMENDATIONS[2]
+  if (age <= 5) return SLEEP_RECOMMENDATIONS[3]
+  return SLEEP_RECOMMENDATIONS[3]
+}
+
 export function getSleepStatus(totalMinutes, rec) {
   const totalHours = totalMinutes / 60
   if (totalHours < rec.minHours) return 'under'

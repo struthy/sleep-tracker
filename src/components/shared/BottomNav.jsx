@@ -1,22 +1,24 @@
 import { NavLink } from 'react-router-dom'
+import { Timer, ChartBar, ClockCounterClockwise, UserCircle } from '@phosphor-icons/react'
 
 const NAV_ITEMS = [
-  { to: '/log', icon: '⏱️', label: 'Log' },
-  { to: '/dashboard', icon: '📊', label: 'Dashboard' },
-  { to: '/history', icon: '📋', label: 'History' },
+  { to: '/log', Icon: Timer, label: 'Log' },
+  { to: '/dashboard', Icon: ChartBar, label: 'Dashboard' },
+  { to: '/history', Icon: ClockCounterClockwise, label: 'History' },
+  { to: '/profile', Icon: UserCircle, label: 'Profile' },
 ]
 
 export default function BottomNav() {
   return (
     <nav className="bottom-nav">
-      {NAV_ITEMS.map((item) => (
+      {NAV_ITEMS.map(({ to, Icon, label }) => (
         <NavLink
-          key={item.to}
-          to={item.to}
+          key={to}
+          to={to}
           className={({ isActive }) => `bottom-nav-item${isActive ? ' active' : ''}`}
         >
-          <span className="bottom-nav-icon">{item.icon}</span>
-          <span className="bottom-nav-label">{item.label}</span>
+          <Icon size={24} weight="duotone" className="bottom-nav-icon" />
+          <span className="bottom-nav-label">{label}</span>
         </NavLink>
       ))}
     </nav>
