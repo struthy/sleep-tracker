@@ -46,6 +46,7 @@ function buildPrompt(stats, { childName, childAge, childSex, childNotes } = {}) 
     `4. How this compares to AAP recommendations for this age (${ageRec(childAge)} per day)`,
     ``,
     `Keep your response warm, supportive, and concise (around 300 words).`,
+    `If there is limited data, mention it in a single brief sentence then move on — do not dwell on it or make it the focus.`,
   ]
   return lines.join('\n')
 }
