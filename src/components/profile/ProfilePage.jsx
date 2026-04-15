@@ -22,7 +22,7 @@ function compressImage(file) {
 }
 
 export default function ProfilePage() {
-  const { childName, childBirthYear, childSex, childPhotoDataURL, childNotes, saveChildProfile, isProfileComplete } = useAuth()
+  const { familyId, childName, childBirthYear, childSex, childPhotoDataURL, childNotes, saveChildProfile, isProfileComplete } = useAuth()
   const navigate = useNavigate()
   const fileInputRef = useRef(null)
 
