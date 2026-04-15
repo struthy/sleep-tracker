@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { signOutUser } from '../../services/auth'
+import { clearAllEntries } from '../../services/sleepService'
 import { Camera, User } from '@phosphor-icons/react'
 
 function compressImage(file) {
@@ -32,6 +33,8 @@ export default function ProfilePage() {
   const [notes, setNotes] = useState(childNotes || '')
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
+  const [clearConfirm, setClearConfirm] = useState(false)
+  const [clearing, setClearing] = useState(false)
 
   async function handlePhotoChange(e) {
     const file = e.target.files?.[0]
@@ -59,6 +62,19 @@ export default function ProfilePage() {
       setError(e.message)
     } finally {
       setSaving(false)
+    }
+  }
+
+  async function handleClearAll() {
+    if (!clearConfirm) { setClearConfirm(true); return }
+    setClearing(true)
+    try {
+      await clearAllEntries(familyId)
+      setClearConfirm(false)
+    } catch (e) {
+      setError(e.message)
+    } finally {
+      setClearing(false)
     }
   }
 
@@ -175,10 +191,43 @@ export default function ProfilePage() {
 
         <hr className="divider" style={{ marginTop: 8 }} />
 
+        {clearConfirm ? (
+          <div className="clear-confirm-box">
+            <p>This will permanently delete all sleep entries. This cannot be undone.</p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <button
+                type="button"
+                className="btn btn-sm"
+                style={{ flex: 1, background: 'var(--red)', color: 'white' }}
+                onClick={handleClearAll}
+                disabled={clearing}
+              >
+                {clearing ? 'Deleting…' : 'Yes, delete all'}
+              </button>
+              <button
+                type="button"
+                className="btn btn-ghost btn-sm"
+                style={{ flex: 1 }}
+                onClick={() => setClearConfirm(false)}
+              >
+                Cancel
+              </button>
+            </div>
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="btn btn-ghost btn-sm"
+            style={{ color: 'var(--red)' }}
+            onClick={handleClearAll}
+          >
+            Clear all sleep data
+          </button>
+        )}
+
         <button
           type="button"
           className="btn btn-ghost btn-sm"
-          style={{ color: 'var(--red)' }}
           onClick={() => signOutUser()}
         >
           Sign out

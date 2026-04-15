@@ -3,7 +3,7 @@ import { updateEntry } from '../../services/sleepService'
 import { useAuth } from '../../context/AuthContext'
 import { formatDuration, combineDateAndTime } from '../../utils/dateHelpers'
 import ErrorBanner from '../shared/ErrorBanner'
-import { Sun, Moon } from '@phosphor-icons/react'
+import { Sun, Moon, Plus, X } from '@phosphor-icons/react'
 
 function toInputDate(ts) {
   const d = ts?.toDate ? ts.toDate() : new Date(ts)
@@ -29,6 +29,7 @@ export default function EditEntryModal({ entry, onClose }) {
   const [endTime, setEndTime] = useState(toInputTime(entry.endTime))
   const [mood, setMood] = useState(entry.mood || null)
   const [notes, setNotes] = useState(entry.notes || '')
+  const [wakings, setWakings] = useState(entry.wakings?.map(String) || [])
   const [saving, setSaving] = useState(false)
   const [error, setError] = useState(null)
 
@@ -41,12 +42,14 @@ export default function EditEntryModal({ entry, onClose }) {
 
     setSaving(true)
     try {
+      const parsedWakings = wakings.map((v) => parseInt(v, 10)).filter((v) => !isNaN(v) && v > 0)
       await updateEntry(familyId, entry.id, {
         type,
         startTime: start,
         endTime: end,
         mood: mood || null,
         notes: notes || null,
+        wakings: parsedWakings,
       })
       onClose()
     } catch (e) {
@@ -102,6 +105,38 @@ export default function EditEntryModal({ entry, onClose }) {
               </button>
             ))}
           </div>
+
+          {type === 'night' && (
+            <div className="wakings-section">
+              <div className="wakings-header">
+                <span className="form-label" style={{ margin: 0 }}>Night wakings</span>
+                <button type="button" className="wakings-add-btn" onClick={() => setWakings((w) => [...w, ''])}>
+                  <Plus size={14} weight="bold" /> Add waking
+                </button>
+              </div>
+              {wakings.length === 0 && (
+                <p className="wakings-empty">No wakings logged.</p>
+              )}
+              {wakings.map((val, i) => (
+                <div key={i} className="waking-row">
+                  <span className="waking-label">Waking {i + 1}</span>
+                  <input
+                    className="form-input waking-input"
+                    type="number"
+                    min="1"
+                    max="120"
+                    placeholder="mins"
+                    value={val}
+                    onChange={(e) => setWakings((w) => w.map((v, idx) => idx === i ? e.target.value : v))}
+                  />
+                  <span className="waking-unit">min awake</span>
+                  <button type="button" className="waking-remove" onClick={() => setWakings((w) => w.filter((_, idx) => idx !== i))}>
+                    <X size={14} weight="bold" />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
 
           <label className="form-label">
             Notes

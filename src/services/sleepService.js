@@ -10,6 +10,7 @@ import {
   onSnapshot,
   Timestamp,
   getDocs,
+  writeBatch,
 } from 'firebase/firestore'
 import { db } from './firebase'
 
@@ -41,6 +42,7 @@ export async function addEntry(familyId, entry) {
     logMethod: entry.logMethod || 'manual',
     notes: entry.notes || null,
     mood: entry.mood || null,
+    wakings: entry.wakings?.length ? entry.wakings : [],
     createdBy: entry.createdBy,
     createdAt: Timestamp.now(),
   })
@@ -68,6 +70,25 @@ export async function updateEntry(familyId, entryId, updates) {
 
 export async function deleteEntry(familyId, entryId) {
   await deleteDoc(doc(db, 'families', familyId, 'sleepEntries', entryId))
+}
+
+export async function clearAllEntries(familyId) {
+  const snap = await getDocs(entriesRef(familyId))
+  // Batch deletes in chunks of 500 (Firestore limit)
+  const chunks = []
+  let batch = writeBatch(db)
+  let count = 0
+  for (const d of snap.docs) {
+    batch.delete(d.ref)
+    count++
+    if (count === 500) {
+      chunks.push(batch.commit())
+      batch = writeBatch(db)
+      count = 0
+    }
+  }
+  if (count > 0) chunks.push(batch.commit())
+  await Promise.all(chunks)
 }
 
 // Real-time listener for recent entries (used on History view)

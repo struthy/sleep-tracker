@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Sun, Moon } from '@phosphor-icons/react'
+import { Sun, Moon, Plus, X } from '@phosphor-icons/react'
 
 const MOODS = [
   { value: 'great', emoji: '😄', label: 'Great' },
@@ -10,6 +10,26 @@ const MOODS = [
 export default function NotesMoodPicker({ onSave, onCancel, sleepType, duration }) {
   const [mood, setMood] = useState(null)
   const [notes, setNotes] = useState('')
+  const [wakings, setWakings] = useState([]) // array of minute values
+
+  function addWaking() {
+    setWakings((w) => [...w, ''])
+  }
+
+  function updateWaking(i, val) {
+    setWakings((w) => w.map((v, idx) => (idx === i ? val : v)))
+  }
+
+  function removeWaking(i) {
+    setWakings((w) => w.filter((_, idx) => idx !== i))
+  }
+
+  function handleSave() {
+    const parsedWakings = wakings
+      .map((v) => parseInt(v, 10))
+      .filter((v) => !isNaN(v) && v > 0)
+    onSave({ mood, notes, wakings: parsedWakings })
+  }
 
   return (
     <div className="modal-overlay">
@@ -39,6 +59,38 @@ export default function NotesMoodPicker({ onSave, onCancel, sleepType, duration 
           </div>
         </div>
 
+        {sleepType === 'night' && (
+          <div className="wakings-section">
+            <div className="wakings-header">
+              <span className="form-label" style={{ margin: 0 }}>Night wakings</span>
+              <button type="button" className="wakings-add-btn" onClick={addWaking}>
+                <Plus size={14} weight="bold" /> Add waking
+              </button>
+            </div>
+            {wakings.length === 0 && (
+              <p className="wakings-empty">No wakings — tap "Add waking" if the child woke up.</p>
+            )}
+            {wakings.map((val, i) => (
+              <div key={i} className="waking-row">
+                <span className="waking-label">Waking {i + 1}</span>
+                <input
+                  className="form-input waking-input"
+                  type="number"
+                  min="1"
+                  max="120"
+                  placeholder="mins"
+                  value={val}
+                  onChange={(e) => updateWaking(i, e.target.value)}
+                />
+                <span className="waking-unit">min awake</span>
+                <button type="button" className="waking-remove" onClick={() => removeWaking(i)}>
+                  <X size={14} weight="bold" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+
         <label className="form-label">
           Notes (optional)
           <textarea
@@ -46,12 +98,12 @@ export default function NotesMoodPicker({ onSave, onCancel, sleepType, duration 
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="e.g. fought sleep, woke early…"
-            rows={3}
+            rows={2}
           />
         </label>
 
         <div className="sheet-actions">
-          <button className="btn btn-primary" onClick={() => onSave({ mood, notes })}>
+          <button className="btn btn-primary" onClick={handleSave}>
             Save
           </button>
           <button className="btn btn-ghost" onClick={onCancel}>

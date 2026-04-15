@@ -34,7 +34,7 @@ export default function ManualEntryForm() {
     setPendingEntry({ startTime: start, endTime: end, durationMinutes, type })
   }
 
-  async function handleSaveMood({ mood, notes }) {
+  async function handleSaveMood({ mood, notes, wakings }) {
     setSaving(true)
     setError(null)
     try {
@@ -45,6 +45,7 @@ export default function ManualEntryForm() {
         logMethod: 'manual',
         mood,
         notes,
+        wakings: wakings || [],
         createdBy: user.uid,
       })
       // Reset form

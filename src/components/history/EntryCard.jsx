@@ -39,6 +39,12 @@ export default function EntryCard({ entry }) {
           <div className="entry-times">
             {formatTime(entry.startTime)} – {formatTime(entry.endTime)}
           </div>
+          {entry.wakings?.length > 0 && (
+            <div className="entry-wakings">
+              {entry.wakings.length} waking{entry.wakings.length !== 1 ? 's' : ''}
+              {' · '}{entry.wakings.reduce((a, b) => a + b, 0)} min awake
+            </div>
+          )}
           {entry.notes && <div className="entry-notes">{entry.notes}</div>}
         </div>
         <div className="entry-right">

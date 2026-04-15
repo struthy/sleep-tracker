@@ -30,6 +30,11 @@ function buildPrompt(stats, { childName, childAge, childSex, childNotes } = {}) 
     `  Average bedtime: ${stats.avgBedtime}`,
     `  Average wake time: ${stats.avgWakeTime}`,
     `  Total days tracked: ${stats.daysTracked}`,
+    ...(stats.nightsTrackedWithWakings > 0 ? [
+      `  Avg night wakings: ${stats.avgWakingsPerNight} per night`,
+      `  Avg total time awake during wakings: ${stats.avgWakingMinutes} min per night`,
+      `  (based on ${stats.nightsTrackedWithWakings} tracked nights)`,
+    ] : []),
     ``,
     `Notes/moods logged: ${stats.recentNotes || 'None'}`,
     ``,

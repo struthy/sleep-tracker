@@ -108,6 +108,15 @@ export function buildAIStats(entries, daily30) {
     .map((e) => `[${e.mood || 'no mood'}] ${e.notes}`)
     .join('; ')
 
+  // Waking stats from night entries that have waking data
+  const nightsWithWakings = nightEntries.filter((e) => e.wakings?.length)
+  const avgWakingsPerNight = nightsWithWakings.length
+    ? +(nightsWithWakings.reduce((s, e) => s + e.wakings.length, 0) / nightsWithWakings.length).toFixed(1)
+    : 0
+  const avgWakingMinutes = nightsWithWakings.length
+    ? Math.round(nightsWithWakings.reduce((s, e) => s + e.wakings.reduce((a, b) => a + b, 0), 0) / nightsWithWakings.length)
+    : 0
+
   return {
     dailyTotals: recent14,
     avgNapMinutes: getAverageByType(napEntries),
@@ -116,5 +125,8 @@ export function buildAIStats(entries, daily30) {
     avgWakeTime: getAverageWakeTime(nightEntries) || 'unknown',
     daysTracked: recent14.filter((d) => d.totalMinutes > 0).length,
     recentNotes: recentNotes || 'None',
+    avgWakingsPerNight,
+    avgWakingMinutes,
+    nightsTrackedWithWakings: nightsWithWakings.length,
   }
 }

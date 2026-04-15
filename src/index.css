@@ -671,6 +671,7 @@ body {
 .entry-date { font-size: 0.75rem; color: var(--text-2); margin-bottom: 2px; }
 .entry-times { font-weight: 600; font-size: 0.95rem; }
 .entry-notes { font-size: 0.8rem; color: var(--text-2); margin-top: 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.entry-wakings { font-size: 0.78rem; color: var(--accent-night); font-weight: 500; margin-top: 2px; }
 
 .entry-right {
   display: flex;
@@ -764,6 +765,96 @@ body {
   font-size: 0.8rem;
   color: var(--text-2);
   margin-top: 2px;
+}
+
+/* ===========================
+   Night Wakings
+   =========================== */
+.wakings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.wakings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.wakings-add-btn {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: none;
+  border: 1.5px solid var(--border);
+  border-radius: 100px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--text-2);
+  padding: 4px 10px;
+  cursor: pointer;
+  transition: border-color 0.15s, color 0.15s;
+}
+
+.wakings-add-btn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.wakings-empty {
+  font-size: 0.78rem;
+  color: var(--text-2);
+}
+
+.waking-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.waking-label {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  white-space: nowrap;
+  min-width: 64px;
+}
+
+.waking-input {
+  width: 70px !important;
+  padding: 6px 8px !important;
+  font-size: 0.9rem !important;
+  text-align: center;
+}
+
+.waking-unit {
+  font-size: 0.8rem;
+  color: var(--text-2);
+  flex: 1;
+}
+
+.waking-remove {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--text-2);
+  display: flex;
+  align-items: center;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.waking-remove:hover { color: var(--red); }
+
+.clear-confirm-box {
+  background: rgba(255, 113, 108, 0.08);
+  border: 1px solid rgba(255, 113, 108, 0.3);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  font-size: 0.875rem;
 }
 
 /* ===========================

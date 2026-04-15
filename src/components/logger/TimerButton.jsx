@@ -19,7 +19,7 @@ export default function TimerButton({ type, label, icon }) {
     setPendingEntry({ startTime, endTime, durationMinutes })
   }
 
-  async function handleSaveMood({ mood, notes }) {
+  async function handleSaveMood({ mood, notes, wakings }) {
     if (!pendingEntry) return
     setSaving(true)
     setError(null)
@@ -31,6 +31,7 @@ export default function TimerButton({ type, label, icon }) {
         logMethod: 'timer',
         mood,
         notes,
+        wakings: wakings || [],
         createdBy: user.uid,
       })
       setPendingEntry(null)
